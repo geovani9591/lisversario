@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Lisversario — sigilos</title>
+    <link rel="stylesheet" href="./css/style.css?v=20" />
+  </head>
+  <body>
+    <header class="topbar">
+      <strong>Lisversario</strong>
+      <button class="reset" id="reset" type="button">Reiniciar</button>
+    </header>
+
+    <main class="stage-wrap">
+      <div class="stage" id="stage">
+        <p class="complete" id="complete">esquema completo</p>
+        <svg class="edges" id="edges" aria-hidden="true"></svg>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>bolinha: dica · sigilo: senha</span>
+      <span>senhas: 1 · 2 · 3</span>
+    </footer>
+
+    <div class="overlay" id="overlay" aria-hidden="true">
+      <div class="dialog" id="dialog" role="dialog" aria-labelledby="dialog-title">
+        <h2 id="dialog-title">Acesso restrito</h2>
+        <p id="dialog-copy">Digite a senha deste sigilo.</p>
+        <form id="password-form">
+          <input
+            id="password-input"
+            type="password"
+            name="password"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="senha"
+          />
+          <div class="actions">
+            <button type="button" id="cancel">Cancelar</button>
+            <button class="primary" type="submit">Confirmar</button>
+          </div>
+          <p class="error" id="password-error" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="./js/app.js?v=21"></script>
+  </body>
+</html>
