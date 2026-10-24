@@ -1,0 +1,95 @@
+.theme-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #8a8a8a;
+  background: transparent;
+  color: #c8c8c8;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.theme-toggle svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+.theme-toggle:hover {
+  color: #f4f4f4;
+  border-color: #f4f4f4;
+}
+
+.hint-secret {
+  display: none;
+  color: #3a3a3a;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+html.theme-light {
+  background: #f4efe6;
+}
+
+html.theme-light body {
+  background: #f4efe6;
+  color: #1c1c1c;
+}
+
+html.theme-light .topbar {
+  background: #f4efe6;
+  color: #6a645c;
+}
+
+html.theme-light .topbar strong {
+  color: #1c1c1c;
+}
+
+html.theme-light .hint-back {
+  color: #6a645c;
+  border-bottom-color: #c8c0b4;
+}
+
+html.theme-light .hint-back:hover {
+  color: #1c1c1c;
+  border-bottom-color: #1c1c1c;
+}
+
+html.theme-light .theme-toggle {
+  border-color: #c4a035;
+  color: #c4a035;
+  background: #fffaf1;
+}
+
+html.theme-light .theme-toggle:hover {
+  border-color: #a88620;
+  color: #a88620;
+}
+
+html.theme-light .icon-moon {
+  display: none;
+}
+
+html.theme-light .icon-sun {
+  display: block;
+}
+
+html.theme-light .hint-verse {
+  display: none;
+}
+
+html.theme-light .hint-secret {
+  display: block;
+}

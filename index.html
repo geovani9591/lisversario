@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Lisversario — sigilos</title>
-    <link rel="stylesheet" href="./css/style.css?v=20" />
+    <link rel="stylesheet" href="./css/style.css?v=36" />
   </head>
   <body>
     <header class="topbar">
@@ -14,21 +14,24 @@
 
     <main class="stage-wrap">
       <div class="stage" id="stage">
-        <p class="complete" id="complete">esquema completo</p>
         <svg class="edges" id="edges" aria-hidden="true"></svg>
       </div>
     </main>
-
-    <footer class="footer">
-      <span>bolinha: dica · sigilo: senha</span>
-      <span>senhas: 1 · 2 · 3</span>
-    </footer>
 
     <div class="overlay" id="overlay" aria-hidden="true">
       <div class="dialog" id="dialog" role="dialog" aria-labelledby="dialog-title">
         <h2 id="dialog-title">Acesso restrito</h2>
         <p id="dialog-copy">Digite a senha deste sigilo.</p>
         <form id="password-form">
+          <input
+            id="user-input"
+            class="dialog-user"
+            type="text"
+            name="username"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="usuário"
+          />
           <input
             id="password-input"
             type="password"
@@ -46,6 +49,6 @@
       </div>
     </div>
 
-    <script type="module" src="./js/app.js?v=21"></script>
+    <script type="module" src="./js/app.js?v=41"></script>
   </body>
 </html>

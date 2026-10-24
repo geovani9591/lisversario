@@ -1,4 +1,4 @@
-import { NODES, EDGES, INITIAL, HINT_PASSWORDS, HINT_STORAGE_KEY } from "./puzzles.js?v=21";
+import { NODES, EDGES, INITIAL, HINT_PASSWORDS, HINT_STORAGE_KEY } from "./puzzles.js?v=41";
 
 const STORAGE_KEY = "lisversario-mock-v3";
 
@@ -6,10 +6,10 @@ const stage = document.querySelector("#stage");
 const edgesSvg = document.querySelector("#edges");
 const overlay = document.querySelector("#overlay");
 const form = document.querySelector("#password-form");
+const userInput = document.querySelector("#user-input");
 const input = document.querySelector("#password-input");
 const errorEl = document.querySelector("#password-error");
 const dialog = document.querySelector("#dialog");
-const completeEl = document.querySelector("#complete");
 const dialogTitle = document.querySelector("#dialog-title");
 const dialogCopy = document.querySelector("#dialog-copy");
 
@@ -44,10 +44,6 @@ function isUnlocked(id) {
 
 function isSigilSolved(id) {
   return (state.solvedSigils || []).includes(id);
-}
-
-function isComplete() {
-  return Boolean(state.complete);
 }
 
 function waitingSigil() {
@@ -127,8 +123,6 @@ function paint() {
     el.classList.add("is-open");
     if (node.waits === waiting) el.classList.add("is-prompt");
   });
-
-  completeEl.classList.toggle("is-on", isComplete());
 }
 
 function drawEdges() {
@@ -164,24 +158,38 @@ function loadHintUnlocks() {
   }
 }
 
-function isHintUnlocked(id) {
-  return Boolean(loadHintUnlocks()[id]);
-}
-
 function saveHintUnlock(id) {
   const map = loadHintUnlocks();
   map[id] = true;
   localStorage.setItem(HINT_STORAGE_KEY, JSON.stringify(map));
 }
 
+function isHintUnlocked(id) {
+  return Boolean(loadHintUnlocks()[id]);
+}
+
+function openReward(url) {
+  if (/^https?:\/\//i.test(url)) {
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  window.location.href = url;
+}
+
 function onNodeClick(node) {
   if (node.type === "gate") {
     if (!isGateVisible(node.id) || !node.hint) return;
-    if (isHintUnlocked(node.id)) {
+    if (!HINT_PASSWORDS[node.id] || isHintUnlocked(node.id)) {
+      saveHintUnlock(node.id);
       window.location.href = node.hint;
       return;
     }
     openPassword("hint", node);
+    return;
+  }
+
+  if (isSigilSolved(node.id) && node.reward) {
+    openReward(node.reward);
     return;
   }
 
@@ -193,18 +201,23 @@ function openPassword(kind, node) {
   pending = { kind, node };
   errorEl.textContent = "";
   input.value = "";
+  userInput.value = "";
+  const needsUser = kind === "sigil" && Boolean(node.user);
+  dialog.classList.toggle("has-user", needsUser);
   if (kind === "hint") {
     dialogTitle.textContent = "Dica restrita";
     dialogCopy.textContent = "Digite a senha para abrir esta dica.";
     input.removeAttribute("inputmode");
   } else {
     dialogTitle.textContent = "Acesso restrito";
-    dialogCopy.textContent = "Digite a senha deste sigilo.";
-    input.setAttribute("inputmode", "numeric");
+    dialogCopy.textContent = node.prompt || "Digite a senha deste sigilo.";
+    const numeric = /^\d+$/.test(node.password || "");
+    if (needsUser || !numeric) input.removeAttribute("inputmode");
+    else input.setAttribute("inputmode", "numeric");
   }
   overlay.classList.add("is-open");
   overlay.setAttribute("aria-hidden", "false");
-  window.setTimeout(() => input.focus(), 40);
+  window.setTimeout(() => (needsUser ? userInput : input).focus(), 40);
 }
 
 function closePassword() {
@@ -227,8 +240,14 @@ function submitPassword(event) {
   event.preventDefault();
   if (!pending) return;
 
-  if (normalize(input.value) !== normalize(expectedPassword())) {
-    errorEl.textContent = "senha incorreta";
+  const passwordOk = normalize(input.value) === normalize(expectedPassword());
+  const userOk =
+    pending.kind !== "sigil" ||
+    !pending.node.user ||
+    normalize(userInput.value) === normalize(pending.node.user);
+
+  if (!passwordOk || !userOk) {
+    errorEl.textContent = pending.node.user ? "usuário ou senha incorretos" : "senha incorreta";
     dialog.classList.remove("is-shake");
     void dialog.offsetWidth;
     dialog.classList.add("is-shake");
@@ -276,13 +295,17 @@ function unlockSigil(sigil) {
 
 function reset() {
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(HINT_STORAGE_KEY);
   state = structuredClone(INITIAL);
   state.solvedSigils = [];
   renderNodes();
 }
 
 document.querySelector("#cancel").addEventListener("click", closePassword);
-document.querySelector("#reset").addEventListener("click", reset);
+if (new URLSearchParams(window.location.search).has("dev")) {
+  document.body.classList.add("is-dev");
+  document.querySelector("#reset").addEventListener("click", reset);
+}
 form.addEventListener("submit", submitPassword);
 overlay.addEventListener("click", (event) => {
   if (event.target === overlay) closePassword();

@@ -1,18 +1,30 @@
-import { HINT_STORAGE_KEY } from "./puzzles.js?v=21";
-
 const hintId = document.body.dataset.hint;
+const sigilId = document.body.dataset.sigil;
+const needsLock = document.body.dataset.lock === "1";
+const hintKey = "lisversario-hints-v1";
+const mapKey = "lisversario-mock-v3";
 
-function isUnlocked() {
-  try {
-    const map = JSON.parse(localStorage.getItem(HINT_STORAGE_KEY) || "{}");
-    return Boolean(map[hintId]);
-  } catch {
-    return false;
-  }
+function bounce() {
+  location.replace("../index.html");
 }
 
-if (!hintId || !isUnlocked()) {
-  window.location.replace("../index.html");
-} else {
-  document.documentElement.classList.remove("hint-locked");
+if (sigilId) {
+  let ok = false;
+  try {
+    const map = JSON.parse(localStorage.getItem(mapKey) || "{}");
+    ok = Array.isArray(map.solvedSigils) && map.solvedSigils.includes(sigilId);
+  } catch {
+    ok = false;
+  }
+  if (!ok) bounce();
+} else if (!hintId) {
+  bounce();
+} else if (needsLock) {
+  let ok = false;
+  try {
+    ok = Boolean(JSON.parse(localStorage.getItem(hintKey) || "{}")[hintId]);
+  } catch {
+    ok = false;
+  }
+  if (!ok) bounce();
 }

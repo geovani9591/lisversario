@@ -32,8 +32,33 @@ body {
   grid-template-rows: auto 1fr auto;
 }
 
-.topbar,
-.footer {
+html.is-finale,
+body.is-finale {
+  color-scheme: only light;
+  background: #ababab;
+  color: #1c1c1c;
+}
+
+body.is-finale .topbar {
+  background: #ababab;
+  color: #3a3a3a;
+}
+
+body.is-finale .topbar strong {
+  color: #1c1c1c;
+}
+
+body.is-finale .hint-back {
+  color: #3a3a3a;
+  border-bottom-color: #6a6a6a;
+}
+
+body.is-finale .hint-back:hover {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,22 +66,15 @@ body {
   padding: 10px 16px;
   padding-left: max(16px, env(safe-area-inset-left));
   padding-right: max(16px, env(safe-area-inset-right));
+  padding-top: max(10px, env(safe-area-inset-top));
   color: var(--mute);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.topbar {
   position: sticky;
   top: 0;
   z-index: 5;
   background: var(--bg);
-  padding-top: max(10px, env(safe-area-inset-top));
-}
-
-.footer {
-  padding-bottom: max(10px, env(safe-area-inset-bottom));
 }
 
 .topbar strong {
@@ -65,6 +83,7 @@ body {
 }
 
 button.reset {
+  display: none;
   background: transparent;
   border: 1px solid #3a3a3a;
   color: var(--ink);
@@ -75,6 +94,10 @@ button.reset {
   cursor: pointer;
 }
 
+body.is-dev button.reset {
+  display: inline-block;
+}
+
 button.reset:hover {
   border-color: var(--ink);
 }
@@ -82,7 +105,7 @@ button.reset:hover {
 .stage-wrap {
   display: grid;
   place-items: start center;
-  padding: 8px 8px 32px;
+  padding: 8px 16px 32px;
 }
 
 .stage {
@@ -138,8 +161,8 @@ button.reset:hover {
 }
 
 .node .glyph {
-  width: 80%;
-  height: 80%;
+  width: 66%;
+  height: 66%;
   min-width: 0;
   min-height: 0;
   object-fit: contain;
@@ -305,6 +328,15 @@ button.reset:hover {
   outline: none;
 }
 
+.dialog-user {
+  display: none;
+  margin-bottom: 10px;
+}
+
+.dialog.has-user .dialog-user {
+  display: block;
+}
+
 .dialog input:focus {
   border-color: var(--accent);
 }
@@ -362,27 +394,6 @@ button.reset:hover {
   75% {
     transform: translateX(-4px);
   }
-}
-
-.complete {
-  position: absolute;
-  left: 50%;
-  top: 4%;
-  transform: translateX(-50%);
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  font-size: 11px;
-  color: var(--accent);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.complete.is-on {
-  opacity: 1;
-}
-
-html.hint-locked main {
-  visibility: hidden;
 }
 
 a.reset {
@@ -447,4 +458,39 @@ a.reset {
 .hint-back:hover {
   color: var(--ink);
   border-bottom-color: var(--ink);
+}
+
+.hint-figure {
+  width: 100%;
+  max-width: 420px;
+}
+
+.hint-figure img,
+.finale-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.finale-figure {
+  width: 100%;
+  max-width: min(92vw, 720px);
+}
+
+.hint-verse {
+  color: #c8c8c8;
+  font-size: 17px;
+  line-height: 1.75;
+}
+
+.hint-verse p {
+  margin-bottom: 14px;
+}
+
+.hl-rose {
+  color: #ff8fb8;
+}
+
+.hl-gold {
+  color: #e6c35c;
 }
